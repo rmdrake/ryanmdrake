@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryan M Drake | Multi-Disciplinary Engineer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .code-font { font-family: 'Fira Code', monospace; }
+
+        .hero-gradient {
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+        }
+
+        .card-glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .accent-text {
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #38bdf8, #1e293b);
+        }
+
+        .skill-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            background: rgba(56, 189, 248, 0.1);
+            color: #38bdf8;
+            font-size: 0.875rem;
+            margin: 0.25rem;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 px-6 py-4">
+        <div class="max-w-6xl mx-auto flex justify-between items-center card-glass rounded-full px-6 py-2">
+            <span class="code-font font-bold text-sky-400">ryan_m_drake.sys</span>
+            <div class="space-x-6 text-sm font-medium">
+                <a href="#experience" class="hover:text-sky-400 transition">Experience</a>
+                <a href="#skills" class="hover:text-sky-400 transition">Skills</a>
+                <a href="#contact" class="px-4 py-2 bg-sky-500 text-white rounded-full hover:bg-sky-600 transition">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center justify-center hero-gradient relative overflow-hidden px-6">
+        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#38bdf8 1px, transparent 1px); background-size: 40px 40px;"></div>
+        
+        <div class="max-w-4xl text-center z-10 animate-fade-in">
+            <h2 class="text-sky-400 code-font mb-4 tracking-widest uppercase text-sm">Research & Development | Test | Software Engineer</h2>
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                Solving Complex Problems with <span class="accent-text">Precision.</span>
+            </h1>
+            <p class="text-xl text-slate-400 mb-8 max-w-2xl mx-auto">
+                From low-level firmware validation to full-stack web architecture, I deliver world-class solutions using the scientific method and a relentless drive for excellence.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#experience" class="px-8 py-3 bg-sky-500 hover:bg-sky-600 text-white rounded-lg font-semibold transition shadow-lg shadow-sky-500/20">View My Work</a>
+                <a href="https://github.com/rmdrake" target="_blank" class="px-8 py-3 card-glass hover:bg-slate-700 text-white rounded-lg font-semibold transition flex items-center gap-2">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About / Objective -->
+    <section id="about" class="py-24 px-6 bg-slate-900/50">
+        <div class="max-w-4xl mx-auto card-glass p-8 md:p-12 rounded-3xl border-sky-500/20">
+            <h3 class="text-2xl font-bold mb-6 flex items-center gap-3">
+                <i class="fas fa-quote-left text-sky-400"></i> Objective
+            </h3>
+            <p class="text-lg text-slate-300 leading-relaxed italic">
+                "To obtain a position in engineering where I can use my extensive research, development, and problem solving experience to deliver world class products and solutions."
+            </p>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="py-24 px-6">
+        <div class="max-w-5xl mx-auto">
+            <h3 class="text-3xl font-bold mb-12 text-center">Professional <span class="accent-text">Journey</span></h3>
+            
+            <div class="relative space-y-12 before:absolute before:left-[28px] md:before:left-[50%] md:before:-ml-0.5 before:w-0.5 before:bg-slate-700">
+                
+                <!-- Role 1 -->
+                <div class="relative flex items-center justify-between md:justify-normal group">
+                    <div class="hidden md:block w-4 h-4 bg-sky-500 rounded-full absolute left-[-8px] border-4 border-slate-900 z-10 group-hover:scale-125 transition"></div>
+                    <div class="w-full md:w-[45%] card-glass p-6 rounded-2xl ml-12 md:ml-0 relative">
+                        <span class="text-sky-400 text-sm font-bold code-font">Oct 2020 - Oct 2025</span>
+                        <h4 class="text-xl font-bold">Test Development Engineer</h4>
+                        <p class="text-slate-400 mb-3">Experis | HP Contractor • Boise, ID</p>
+                        <ul class="list-disc list-inside text-sm text-slate-300 space-y-1">
+                            <li>Design, implement, and exercise methods to test firmware on multi-function print devices.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Role 2 -->
+                <div class="relative flex items-center justify-between md:justify-normal group md:flex-row-reverse">
+                    <div class="hidden md:block w-4 h-4 bg-sky-500 rounded-full absolute left-[calc(50%-8px)] border-4 border-slate-900 z-10 group-hover:scale-125 transition"></div>
+                    <div class="w-full md:w-[45%] card-glass p-6 rounded-2xl ml-12 md:ml-0 relative">
+                        <span class="text-sky-400 text-sm font-bold code-font">May 2017 - Oct 2020</span>
+                        <h4 class="text-xl fontbold">Full Stack Software Developer</h4>
+                        <p class="text-slate-400 mb-3">Witly • Remote in Boise, ID</p>
+                        <ul class="list-disc list-inside text-sm text-slate-300 space-y-1">
+                            <li>Creation, maintenance, and support of Web Based Software for Real Estate Agents.</li>
+                            <li>Developed features, back end API infrastructure, customer facing front end interfaces, and database architecture using <span class="text-sky-300">JavaScript, TypeScript, C#, and MongoDB</span>.</li>
+                            <li>Translated CEO/CTO directives into production-ready feature realities.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Role 3 -->
+                <div class="relative flex items-center justify-between md:justify-normal group">
+                    <div class="hidden md:block w-4 h-4 bg-sky-500 rounded-full absolute left-[calc(50%-8px)] border-4 border-slate-900 z-10 group-hover:scale-125 transition"></div>
+                    <div class="w-full md:w-[45%] card-glass p-6 rounded-2xl ml-12 md:ml-0 relative">
+                        <span class="text-sky-400 text-sm font-bold code-font">Mar 2012 - May 2017</span>
+                        <h4 class="text-xl font-bold">Software Engineer</h4>
+                        <p class="text-slate-400 mb-3">Adecco | HP Contractor • Boise, ID</p>
+                        <ul class="list-undist list-inside text-sm text-slate-300 space-y-1">
+                            <li>Designed and wrote object oriented test strategies using <span class="text-sky-300">C# and Visual Studio Team System</span>.</li>
+                            <li>Developed Metrics Tracking with <span class="text-sky-300">Python, PHP, and MySQL</span>.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Role 4 -->
+                <div class="relative flex items-center justify-between md:justify-normal group md:flex-row-reverse">
+                    <div class="hidden md:block w-4 h-4 bg-sky-500 rounded-full absolute left-[calc(50%-8px)] border-4 border-slate-900 z-10 group-hover:scale-125 transition"></div>
+                    <div class="w-full md:w-[45%] card-glass p-6 rounded-2xl ml-12 md:ml-0 relative">
+                        <span class="text-sky-400 text-sm font-bold code-font">Feb 2001 - Oct 2011</span>
+                        <h4 class="text-xl font-bold">Research and Development Engineer</h4>
+                        <p class="text-slate-400 mb-3">Manpower | HP Contractor • Boise, ID</p>
+                        <ul class="list-disc list-inside text-sm text-slate-300 space-y-1">
+                            <li><strong>Low Level Test Engineer:</strong> Maintained C and C# software tests for non-volatile RAM driver integrity.</li>
+                            <li><strong>Automated Build Administrator:</strong> Designed CI environments for commercial software/drivers.</li>
+                            <li><strong>Job Team Lead:</strong> Verified print job command functionality and device storage systems.</li>
+                            <li><strong>Mechanical Automation:</strong> Built hardware/software using pneumatic actuators to test control panel life spans.</li>
+                            <li><strong>Postscript Device Control Team Lead:</strong> Developed comprehensive test plans and subsequent tests for device level controls of Postscript driven print executions.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-24 px-6 bg-slate-900">
+        <div class="max-w-5xl mx-auto text-center">
+            <h3 class="text-3xl font-bold mb-12">Core <span class="accent-text">Proficiencies</span></h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Skill Card 1 -->
+                <div class="card-glass p-8 rounded-2xl hover:border-sky-500/50 transition group">
+                    <i class="fas fa-microchip text-4xl text-sky-400 mb-6 group-hover:scale-110 transition duration-300"></i>
+                    <h4 class="text-xl font-bold mb-4">Systems & Low Level</h4>
+                    <p class="text-slate-400 text-sm leading-relaxed">Expertise in firmware validation. Deep understanding of hardware/software interaction and driver integrity.</p>
+                </div>
+                <!-- Skill Card 2 -->
+                <div class="card-glass p-8 rounded-2xl hover:border-sky-500/50 transition group">
+                    <i class="fas fa-code text-4xl text-sky-400 mb-6 group-hover:scale-110 transition duration-300"></i>
+                    <h4 class="text-xl font-bold mb-4">Full Stack Dev</h4>
+                    <p class="text-slate-400 text-sm leading-relaxed">Modern web architecture using JavaScript, TypeScript, and C# with scalable database designs (MongoDB/MySQL).</p>
+                </div>
+                <!-- Skill Card 3 -->
+                <div class="card-glass p-8 rounded-2xl hover:border-sky-500/50 transition group">
+                    <i class="fas fa-flask text-4xl text-sky-400 mb-6 group-hover:scale-110 transition duration-300"></i>
+                    <h4 class="text-xl font-bold mb-4">Scientific Method</h4>
+                    <p class="text-slate-400 text-sm leading-relaxed">Applying rigorous analysis and critical thinking to solve complex problems. From concept to finished product.</p>
+                </div>
+            </div>
+
+            <!-- Extra Skills List -->
+            <div class="mt-16 flex flex-wrap justify-center gap-2 max-w-3xl mx-auto">
+                <span class="skill-tag">Linux Enthusiast</span>
+                <span class="skill-tag">Local Open Weight AI Execution</span>
+                <span class="skill-tag">Data Parsing & Analysis</span>
+                <span class="skill-tag">Continuous Integration</span>
+                <span class="skill-tag">Automated Testing</span>
+                <span class="skill-tag">Critical Thinking</span>
+                <span class="skill-tag">Honest and Loyal</span>
+                <span class="skill-tag">Rapid Onboarding</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <footer id="contact" class="py-20 px-6 bg-slate-950 border-t border-slate-800">
+        <div class="max-w-4xl mx-auto text-center">
+            <h3 class="text-3xl font-bold mb-8">Get In <span class="accent-text">Touch</span></h3>
+            <p class="text-slate-400 mb-12">Interested in working together? Reach out via any of the channels below.</p>
+            
+            <div class="flex flex-wrap justify-center gap-8 mb-12 text-lg">
+                <a href="mailto:rmdrake@gmail.com" class="text-slate-300 hover:text-sky-400 transition flex items-center gap-2">
+                    <i class="fas fa-envelope"></i> rmdrake@gmail.com
+                </a>
+                <a href="https://www.linkedin.com/in/ryan-drake-10a188b9/" target="_blank" class="text-slate-300 hover:text-sky-400 transition flex items-center gap-2">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </a>
+                <a href="https://github.com/rmdrake" target="_blank" class="text-slate-300 hover:text-sky-400 transition flex items-center gap-2">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+            </div>
+
+            <div class="pt-8 border-t border-slate-800 text-sm text-slate-500">
+                &copy; <script>document.write(new Date().getFullYear())</script> Ryan M Drake.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple scroll reveal effect using Intersection Observer
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card-glass, .timeline-line').forEach(el => {
+            el.style.opacity = '0'; // Initial state for animation
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
