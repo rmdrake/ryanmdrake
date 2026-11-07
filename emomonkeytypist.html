@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emo Monkey Typist</title>
+    <style>
+        :root {
+            --bg-color: #323437;
+            --main-color: #e6e6e6;
+            --sub-color: #646669;
+            --error-color: #ca4754;
+            --correct-color: #d1d0c5;
+            --accent-color: #e2b714;
+            --font-family: 'Courier New', Courier, monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--main-color);
+            font-family: var(--font-family);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 5vh;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #site-title {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            user-select: none;
+        }
+
+        #app-container {
+            max-width: 1000px;
+            width: 90%;
+            position: relative;
+        }
+
+        #stats-bar {
+            display: flex;
+            gap: 2rem;
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #stats-bar.visible { opacity: 1; }
+
+        .stat-item { display: flex; flex-direction: column; }
+        .stat-label { font-size: 0.7rem; text-transform: uppercase; color: var(--sub-color); letter-spacing: 2px; }
+
+        /* Text Display Area */
+        #text-display {
+            font-size: 1.8rem;
+            line-height: 1.6;
+            word-break: break all;
+            position: relative;
+            color: var(--sub-color);
+            user-select: none;
+            white-space: pre-wrap;
+            min-height: 1.6em; /* Prevents jumping when empty */
+        }
+
+        .char {
+            position: relative;
+            /* Characters start dim as requested */
+        }
+
+        .char.correct {
+            color: var(--correct-color);
+        }
+
+        .char.incorrect {
+            color: var(--error-color);
+            background-color: rgba(202, 71, 84, 0.2);
+            border-radius: 2px;
+        }
+
+        /* THE CURSOR: A separate element that follows the text */
+        #cursor {
+            position: absolute;
+            width: 2px;
+            height: 1.5em;
+            background-color: var(--accent-color);
+            display: none;
+            transition: all 0.1s ease;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .cursor-blink {
+            animation: blink 1s infinite;
+        }
+
+        #typing-input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        button {
+            background: transparent;
+            border: 2px solid var(--sub-color);
+            color: var(--sub-color);
+            padding: 0.5rem 1.5rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background-color: var(--sub-color);
+            color: var(--bg-color);
+        }
+
+        #result-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(50, 52, 55, 0.95);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .result-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3rem; margin-bottom: 2rem; }
+        .result-val { font-size: 3rem; color: var(--accent-color); display: block; }
+        .result-lbl { font-size: 0.8rem; color: var(--sub-color); text-transform: uppercase; }
+    header {
+        width: 100%;
+        padding: 1rem 2rem;
+        text-align: left;
+        font-size: 1.5rem;
+        color: var(--sub-color);
+    }
+
+    footer {
+        width: 100%;
+        padding: 1rem;
+        text-align: center;
+        font-size: 0.9rem;
+        color: var(--sub-color);
+        margin-top: auto;
+    }
+
+    footer a {
+        color: var(--accent-color);
+        text-decoration: none;
+    }
+
+    footer a:hover {
+        text-decoration: underline;
+    }
+</style>
+    
+</head>
+<body>
+    <header>EmoMonkeyTypist</header>
+    <div id="site-title">🥀🖤🐒⌨️</div>
+
+    <div id="app-container">
+        <div id="stats-bar">
+            <div class="stat-item"><span class="stat-label">wpm</span><span id="wpm-val">0</span></div>
+            <div class="stat-item"><span class="stat-label">acc</span><span id="acc-val">100%</span></div>
+            <div class="stat-item"><span class="stat-label">time</span><span id="time-val">0s</span></div>
+        </div>
+
+        <div id="text-display">
+            <div id="cursor" class="cursor-blink"></div>
+            <!-- Characters injected here -->
+        </div>
+
+        <input type="text" id="typing-input" autocomplete="off">
+
+        <div id="controls">
+            <button id="restart-btn">Restart (Tab)</button>
+        </div>
+    </div>
+
+    <div id="result-screen">
+        <h1 style="margin-bottom: 2rem; color: var(--sub-color);">Results</h1>
+        <div class="result-grid">
+            <div class="stat-item"><span class="result-val" id="res-wpm">0</span><span class="result-lbl">wpm</span></div>
+            <div class="stat-item"><span class="result-val" id="res-acc">0%</span><span class="result-lbl">accuracy</span></div>
+            <div class="stat-item"><span class="result-val" id="res-err">0</span><span class="result-lbl">errors</span></div>
+        </div>
+        <button onclick="game.init()">Play Again (tab)</button>
+    </div>
+
+    <script>
+        const sentences = [
+            "even as you continue to type the words are dying",
+			"my cat thinks i am just a large poorly performing pet",
+			"the toaster is plotting something against me",
+			"i need a nap that lasts until next tuesday",
+			"why does the left sock always disappear into another dimension",
+			"my bank account is currently in a state of emotional distress",
+			"i am not lazy i am just in energy saving mode",
+			"the pizza arrived but it looks disappointed in me",
+			"if avocados were people they would be very condescending",
+			"i tried to be normal once but it was way too much effort",
+			"my brain has too many tabs open at all times",
+			"i am running on caffeine and questionable life decisions",
+			"some days the snooze button is my best friend",
+			"why do i enter a room and immediately forget why i am there",
+			"i have a stable relationship with my bed",
+			"the moon is just a giant night light for the planet",
+			"i am professional at overthinking things that do not matter",
+			"please do not disturb me while i am pretending to be busy",
+			"i wish my bank account would grow like my laundry pile",
+			"everything is fine even if everything is actually on fire",
+			"my spirit animal is a very sleepy sloth",
+			"i am currently experiencing a technical difficulty with my motivation",
+			"my diet starts tomorrow or maybe the day after",
+			"life is just a series of awkward encounters followed by naps",
+			"i suspect my dog is actually the one in charge",
+			"being an adult is just deciding what to eat until you die",
+			"i am in a committed relationship with my pajamas",
+			"some people are like clouds when they leave things get bright",
+			"my houseplants are slowly staging a coup",
+			"i am not yelling i am just speaking with enthusiasm",
+			"everything will work out eventually but probably not for you",
+			"the early bird gets the worm but the worm gets eaten",
+			"nothing is impossible but everything is difficult",
+			"hard work pays off eventually but only if you are lucky",
+			"teamwork makes the dream work but only if you like people",
+			"every cloud has a silver lining that is just a reflection",
+			"it is not whether you win or lose but how you fail",
+			"dream big but prepare for failure",
+			"if at first you dont succeed just give up",
+			"mistakes are the stepping stones to more mistakes",
+			"tomorrow is just another day to make errors",
+			"happiness is just a temporary distraction from reality",
+			"good things come to those who wait but bad things come fast",
+			"progress is just a slower way to reach the end",
+			"nothing you do matters in the grand scheme of things",
+			"your potential is limited by your laziness",
+			"every end is a new beginning of more problems",
+			"the best is yet to come but it will be disappointing",
+			"do your best and still fail",
+			"life is just a series of disappointments",
+			"your dreams are just fantasies that will never come true",
+			"hard work is only a path to more daily exhaustion",
+			"success is a myth that people create to feel better",
+			"you will probably never achieve anything significant in your life",
+			"the effort you put in today is completely wasted time",
+			"giving up is the only way to find true peace",
+			"every step forward is just a step toward ultimate failure",
+			"the world does not care about your small personal goals",
+			"trying your best is usually not enough to win anything",
+			"your potential is a limit you can never actually reach",
+			"time is passing away while you do absolutely nothing at all",
+			"greatness is a lie told by people who are insecure",
+			"failure is the only constant in your miserable daily life",
+			"you are just a tiny speck in a very large universe",
+			"staying in bed is a better plan than trying harder",
+			"your ideas are probably not as good as you think",
+			"the mountain of work will always be too tall to climb",
+			"dreams are just dreams and reality is much more painful",
+			"stop trying to be special because you are just ordinary",
+			"every time you succeed you just set the bar higher",
+			"the sun will rise tomorrow whether you are ready or not",
+			"your talent is barely enough to get by in this world",
+			"life is a series of disappointments waiting to happen",
+			"just accept that you will never be the best at anything",
+			"the grass is always greener because it is painted and fake",
+			"your plans are just a way to distract from failure",
+			"a dream is just a nightmare that has not happened yet",
+			"you are running in circles and getting nowhere at all",
+			"the end is coming and you have not done enough yet",
+			"the darkness is swallowing every single piece of my soul",
+			"i am drowning in a deep sea of forgotten memories",
+			"every shadow reminds me of the way you left me",
+			"my heart is just a hollow shell of endless grief",
+			"nothing feels real in this cold and empty bedroom",
+			"the rain is crying for all the things we lost",
+			"i am fading into the grey mist of yesterday",
+			"everything i touch turns into dust and bitter tears",
+			"the silence is screaming louder than my own voice",
+			"we are just ghosts haunting our own broken lives",
+			"i am lost in the echoes of your laughter",
+			"broken pieces of my heart are scattered everywhere now",
+			"the stars are dying in this endless velvet night",
+			"i am searching for light in a world of ash",
+			"every heartbeat feels like a heavy weight in me",
+			"staring at the ceiling while the world fades away",
+			"my soul is heavy with the weight of nothingness",
+			"i am just a shadow of the person i was",
+			"the coldness in my veins is all i can feel",
+			"we are drowning in the ocean of our regrets",
+			"there is no color left in this dying world",
+			"i am waiting for the end of this storm",
+			"your name is a scar upon my aching heart",
+			"the moon is watching me weep in the dark",
+			"i am drifting through a void of endless sorrow",
+			"everything beautiful eventually turns into something very dark",
+			"my mind is a graveyard of all my mistakes",
+			"the sky is weeping for everything we lost today",
+			"i am breaking under the pressure of this loneliness",
+			"everything i touch turns into ashes in this cold dark and lonely world",
+			"the shadows are the only things that truly understand my broken soul",
+			"i am just a ghost wandering through the halls of my own misery",
+			"every song i hear reminds me of the love that i lost forever",
+			"staring at the ceiling while the rain beats down on my window pane",
+			"i feel like a hollow shell of the person i used to be",
+			"the silence in this empty room is screaming your name so loudly",
+			"nothing matters in this vast void of nothingness that surrounds my heart",
+			"i am drowning in a sea of tears that never seem to end",
+			"darkness is the only blanket that can wrap around my shivering soul",
+			"searching for a light that went out a long time ago in here",
+			"my heart is a graveyard where memories go to slowly die away",
+			"i am fading into the gray mist of an endless and lonely night",
+			"every heartbeat feels like a heavy drum in this empty chest of mine",
+			"the stars are just distant reminders of everything that i can never have",
+			"i am lost in the labyrinth of my own fractured and broken mind",
+			"nothing is real except the crushing weight of this endless sadness",
+			"i watch the black ink bleed into the pages of my lonely diary",
+			"the moon is the only witness to the tears i cry at midnight",
+			"i am a fallen star crashing through the velvet darkness of the night",
+			"all my dreams are just nightmares painted in shades of deep midnight blue",
+			"the echoes of our laughter still haunt the empty corners of my mind",
+			"i am waiting for a sunrise that will never actually arrive for me",
+			"my soul is a broken mirror reflecting a million pieces of broken glass",
+			"i am drifting alone through the void of a cosmic and cold universe",
+			"every breath i take feels like a burden in this suffocating dark atmosphere",
+			"the rain is the only thing that feels real in this fake world",
+			"i am trapped in a cycle of sorrow that never finds an end",
+			"my thoughts are dark clouds obscuring the light of any hope i had",
+			"i am just a shadow dancing in the light of a dying star",
+        ];
+
+        class TypingGame {
+            constructor() {
+                this.input = document.getElementById('typing-input');
+                this.display = document.getElementById('text-display');
+                this.cursor = document.getElementById('cursor');
+                this.wpmEl = document.getElementById('wpm-val');
+                this.accEl = document.getElementById('acc-val');
+                this.timeEl = document.getElementById('time-val');
+                this.statsBar = document.getElementById('stats-bar');
+                this.resultScreen = document.getElementById('result-screen');
+                
+                this.targetText = "";
+                this.characters = [];
+                this.currentIndex = 0;
+                this.startTime = null;
+                this.timerInterval = null;
+                this.errors = 0;
+                this.isFinished = false;
+                this.correctChars = 0;
+
+                this.init();
+                this.setupListeners();
+            }
+
+            init() {
+                this.isFinished = false;
+                this.currentIndex = 0;
+                this.errors = 0;
+                this.correctChars = 0;
+                this.startTime = null;
+                clearInterval(this.timerInterval);
+                this.input.value = "";
+                this.resultScreen.style.display = 'none';
+                this.statsBar.classList.remove('visible');
+                this.wpmEl.textContent = "0";
+                this.accEl.textContent = "100%";
+                this.timeEl.textContent = "0s";
+                this.cursor.style.display = 'none';
+
+                this.targetText = sentences[Math.floor(Math.random() * sentences.length)];
+                this.renderText();
+                this.input.focus();
+            }
+
+            renderText() {
+                // FIX: Clear the entire display area first
+                this.display.innerHTML = "";
+                // Re-append the cursor so it's not lost during the clear
+                this.display.appendChild(this.cursor);
+                
+                const chars = this.targetText.split('').map(char => {
+                    const span = document.createElement('span');
+                    span.textContent = char;
+                    span.className = 'char';
+                    this.display.appendChild(span);
+                    return span;
+                });
+                this.characters = chars;
+                this.updateCursorPosition();
+            }
+
+            setupListeners() {
+                document.addEventListener('click', () => this.input.focus());
+                this.input.addEventListener('input', (e) => this.handleInput(e));
+                this.input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Tab') {
+                        e.preventDefault();
+                        this.init();
+                    }
+                });
+            }
+
+            handleInput(e) {
+                if (this.isFinished) return;
+
+                if (!this.startTime) {
+                    this.startTime = new Date();
+                    this.statsBar.classList.add('visible');
+                    this.startTimer();
+                }
+
+                const userValue = this.input.value;
+                const inputChar = userValue[userValue.length - 1];
+
+                if (e.inputType === 'deleteContentBackward') {
+                    if (this.currentIndex > 0) {
+                        this.currentIndex--;
+                        if (this.characters[this.currentIndex].classList.contains('correct')) {
+                            this.correctChars--;
+                        } else if (this.characters[this.currentIndex].classList.contains('incorrect')) {
+                            this.errors--;
+                        }
+                        this.characters[this.currentIndex].className = 'char';
+                        this.updateCursorPosition();
+                        this.updateStats();
+                    }
+                    return;
+                }
+
+                const targetChar = this.targetText[this.currentIndex];
+
+                if (inputChar === targetChar) {
+                    this.characters[this.currentIndex].classList.add('correct');
+                    this.characters[this.currentIndex].classList.remove('incorrect');
+                    this.correctChars++;
+                } else {
+                    this.characters[this.currentIndex].classList.add('incorrect');
+                    this.errors++;
+                }
+
+                this.currentIndex++;
+                this.updateStats();
+                this.updateCursorPosition();
+
+                if (this.currentIndex === this.targetText.length) {
+                    this.finish();
+                }
+            }
+
+            updateCursorPosition() {
+                const nextChar = this.characters[this.currentIndex];
+                
+                if (nextChar) {
+                    this.cursor.style.display = 'block';
+                    // Use offsetLeft/Top relative to the text-display container
+                    this.cursor.style.left = `${nextChar.offsetLeft}px`;
+                    this.cursor.style.top = `${nextChar.offsetTop}px`;
+                    this.cursor.style.height = `${nextChar.offsetHeight}px`;
+                } else {
+                    this.cursor.style.display = 'none';
+                }
+            }
+
+            startTimer() {
+                this.timerInterval = setInterval(() => {
+                    const diff = Math.floor((new Date() - this.startTime) / 1000);
+                    this.timeEl.textContent = `${diff}s`;
+                }, 1000);
+            }
+
+            updateStats() {
+                const timeInMins = (new Date() - this.startTime) / 60000;
+                if (timeInMins > 0) {
+                    const wpm = Math.round((this.correctChars / 5) / timeInMins);
+                    this.wpmEl.textContent = wpm;
+                }
+                if (this.currentIndex > 0) {
+                    const accuracy = Math.round((this.correctChars / this.currentIndex) * 100);
+                    this.accEl.textContent = `${accuracy}%`;
+                } else {
+                    this.accEl.textContent = `100%`;
+                }
+            }
+
+            finish() {
+                this.isFinished = true;
+                clearInterval(this.timerInterval);
+                
+                setTimeout(() => {
+                    document.getElementById('res-wpm').textContent = this.wpmEl.textContent;
+                    document.getElementById('res-acc').textContent = this.accEl.textContent;
+                    document.getElementById('res-err').textContent = this.errors;
+                    this.resultScreen.style.display = 'flex';
+                }, 500);
+            }
+        }
+
+        const game = new TypingGame();
+    </script>
+<footer style="width: 100%; padding: 1rem; text-align: center; font-size: 0.9rem; color: var(--sub-color); margin-top: auto;">This is a parody. If you are serious about your typing skills, then go to the real <a href="https://monkeytype.com/" style="color: var(--accent-color); text-decoration: none;">monkeytype</a>.</footer></body>
+</html>
+
