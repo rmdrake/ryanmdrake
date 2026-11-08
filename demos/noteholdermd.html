@@ -632,18 +632,15 @@
 
                 let addedCount = 0;
                 importedNotes.forEach(impNote => {
-                    const duplicate = notes.some(n => n.title === impNote.title);
-                    if (!duplicate && impNote.title) {
-                        const newNote = {
-                            ...impNote,
-                            id: Date.now().toString() + Math.random().toString(36).substr(2, 9)
-                        };
-                        notes.push(newNote);
+                    // Check for collisions based on id
+                    const duplicate = notes.some(n => n.id === impNote.id);
+                    if (!duplicate) {
+                        notes.push(impNote);
                         addedCount++;
                     }
                 });
 
-                alert(`Import complete. Added ${addedCount} new unique notes.`);
+                alert(`Import complete. Added ${addedCount} notes.`);
                 renderSidebar();
             } catch (err) {
                 alert('Error importing file: ' + err.message);
@@ -664,6 +661,33 @@
     function changeThemeScheme(scheme) {
         document.documentElement.setAttribute('data-scheme', scheme);
     }
+
+    // Scroll synchronization
+    let isSyncScrolling = false;
+
+    contentInput.addEventListener('scroll', () => {
+        if (isSyncScrolling) return;
+        const scrollHeight = contentInput.scrollHeight;
+        const clientHeight = contentInput.clientHeight;
+        if (scrollHeight <= clientHeight) return;
+
+        isSyncScrolling = true;
+        const scrollPercentage = contentInput.scrollTop / (scrollHeight - clientHeight);
+        previewDiv.scrollTop = scrollPercentage * (previewDiv.scrollHeight - previewDiv.clientHeight);
+        setTimeout(() => { isSyncScrolling = false; }, 50);
+    });
+
+    previewDiv.addEventListener('scroll', () => {
+        if (isSyncScrolling) return;
+        const scrollHeight = previewDiv.scrollHeight;
+        const clientHeight = previewDiv.clientHeight;
+        if (scrollHeight <= clientHeight) return;
+
+        isSyncScrolling = true;
+        const scrollPercentage = previewDiv.scrollTop / (scrollHeight - clientHeight);
+        contentInput.scrollTop = scrollPercentage * (contentInput.scrollHeight - contentInput.clientHeight);
+        setTimeout(() => { isSyncScrolling = false; }, 50);
+    });
 
     // Initialization
     init();
